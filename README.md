@@ -60,6 +60,47 @@ npm run build
 npm run test
 ```
 
+## Docker Compose
+
+Archivos incluidos para despliegue:
+
+- `docker-compose.yml`
+- `Dockerfile.api`
+- `Dockerfile.web`
+- `.env.docker.example`
+
+### Levantar localmente con Docker
+
+1. Copia `.env.docker.example` como `.env`
+2. Ajusta al menos `JWT_SECRET`
+3. Ejecuta:
+
+```bash
+docker compose up -d --build
+```
+
+Servicios:
+
+- Frontend: `http://localhost:8080`
+- API: disponible a traves de `http://localhost:8080/api`
+- PostgreSQL: contenedor interno `postgres`
+
+### Despliegue en Dockploy
+
+1. Sube el repositorio a GitHub
+2. En Dockploy crea una aplicacion basada en `docker-compose.yml`
+3. Define las variables de entorno del archivo `.env.docker.example`
+4. Publica el servicio `web` en el dominio que quieras usar
+5. Mantén `VITE_API_URL` en `/api`, porque Nginx ya redirige el frontend al servicio `api`
+
+Notas:
+
+- El frontend se sirve con Nginx y soporta rutas SPA
+- Nginx redirige `/api/*` al contenedor `api`
+- PostgreSQL usa un volumen persistente llamado `postgres_data`
+- La API crea el usuario administrador inicial al arrancar si no existe
+- En producción conviene cambiar `DB_SYNC` a `false` cuando migres a un esquema estable
+
 ## Modulos implementados
 
 - Login administrativo sin registro publico
