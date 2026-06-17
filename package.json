@@ -1,0 +1,20 @@
+{
+  "name": "encuestas-universitarias",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Plataforma full stack para gestion de encuestas de rutas universitarias",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run start:dev --workspace apps/api",
+    "dev:web": "npm run dev --workspace apps/admin-web",
+    "build": "npm run build --workspace apps/api && npm run build --workspace apps/admin-web",
+    "check": "npm run check --workspace apps/api && npm run check --workspace apps/admin-web",
+    "test": "npm run test --workspace apps/api && npm run test --workspace apps/admin-web"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
