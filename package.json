@@ -12,6 +12,8 @@
     "dev:web": "npm run dev --workspace apps/admin-web",
     "build": "npm run build --workspace apps/api && npm run build --workspace apps/admin-web",
     "build:pdf": "node scripts/build-pdf.mjs",
+    "build:user-pdf": "node scripts/build-user-manual-pdf.mjs",
+    "build:docs": "node scripts/build-pdf.mjs && node scripts/build-user-manual-pdf.mjs",
     "check": "npm run check --workspace apps/api && npm run check --workspace apps/admin-web",
     "test": "npm run test --workspace apps/api && npm run test --workspace apps/admin-web"
   },
