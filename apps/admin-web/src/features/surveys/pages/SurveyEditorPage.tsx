@@ -122,10 +122,10 @@ export function SurveyEditorPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           to="/encuestas"
-          className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm"
+          className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition"
         >
           <ArrowLeft className="h-4 w-4" />
-          Volver
+          Volver a Encuestas
         </Link>
         <button
           type="button"
@@ -135,80 +135,104 @@ export function SurveyEditorPage() {
               createEmptyQuestion('SHORT_TEXT', prev.length + 1),
             ])
           }
-          className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+          className="inline-flex items-center gap-2 rounded-xl border border-unisinu-red bg-red-50/50 px-3.5 py-2 text-xs sm:text-sm font-semibold text-unisinu-red hover:bg-unisinu-red hover:text-white transition"
         >
           <PlusCircle className="h-4 w-4" />
-          Agregar pregunta
+          Agregar Pregunta
         </button>
       </div>
 
       <Panel
-        title={surveyId ? 'Editar encuesta' : 'Nueva encuesta'}
-        subtitle="Configura ruta, vigencia, estado y formulario dinamico"
+        title={surveyId ? 'Editar Encuesta' : 'Nueva Encuesta'}
+        subtitle="Configura ruta institucional, vigencia temporal y preguntas dinámicas"
         actions={
-          <div className="inline-flex items-center gap-2 rounded-full bg-red-50 px-4 py-2 text-sm text-red-700">
-            <ClipboardPlus className="h-4 w-4" />
-            Constructor flexible
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-red-50 border border-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-unisinu-red">
+            <ClipboardPlus className="h-3.5 w-3.5" />
+            Formulario Dinámico
           </div>
         }
       >
         <form
-          className="space-y-6"
+          className="space-y-5"
           onSubmit={(event) => {
             event.preventDefault();
             saveMutation.mutate();
           }}
         >
-          <div className="grid gap-4 md:grid-cols-2">
-            <select
-              value={form.routeId}
-              onChange={(event) => setForm((prev) => ({ ...prev, routeId: event.target.value }))}
-              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
-            >
-              <option value="">Selecciona una ruta</option>
-              {routesQuery.data?.map((route) => (
-                <option key={route.id} value={route.id}>
-                  {route.nombreRuta}
-                </option>
-              ))}
-            </select>
-            <input
-              value={form.titulo}
-              onChange={(event) => setForm((prev) => ({ ...prev, titulo: event.target.value }))}
-              placeholder="Titulo de la encuesta"
-              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">
+                Ruta Universitaria Asociada *
+              </label>
+              <select
+                required
+                value={form.routeId}
+                onChange={(event) => setForm((prev) => ({ ...prev, routeId: event.target.value }))}
+                className="mt-1.5 w-full rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-900 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-4 focus:ring-unisinu-red/15"
+              >
+                <option value="">Selecciona una ruta</option>
+                {routesQuery.data?.map((route) => (
+                  <option key={route.id} value={route.id}>
+                    {route.nombreRuta}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">
+                Título de la Encuesta *
+              </label>
+              <input
+                required
+                value={form.titulo}
+                onChange={(event) => setForm((prev) => ({ ...prev, titulo: event.target.value }))}
+                placeholder="Ej. Evaluación de Rutas Universitarias 2026-II"
+                className="mt-1.5 w-full rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-500 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-4 focus:ring-unisinu-red/15"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">
+              Descripción o Instrucciones para el Estudiante
+            </label>
+            <textarea
+              value={form.descripcion}
+              onChange={(event) => setForm((prev) => ({ ...prev, descripcion: event.target.value }))}
+              placeholder="Explica el objetivo de la encuesta..."
+              className="mt-1.5 min-h-24 w-full rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-500 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-4 focus:ring-unisinu-red/15"
             />
           </div>
 
-          <textarea
-            value={form.descripcion}
-            onChange={(event) => setForm((prev) => ({ ...prev, descripcion: event.target.value }))}
-            placeholder="Descripcion"
-            className="min-h-28 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
-          />
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <input
-              type="datetime-local"
-              value={form.startsAt}
-              onChange={(event) => setForm((prev) => ({ ...prev, startsAt: event.target.value }))}
-              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
-            />
-            <input
-              type="datetime-local"
-              value={form.endsAt}
-              onChange={(event) => setForm((prev) => ({ ...prev, endsAt: event.target.value }))}
-              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
-            />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">Fecha y Hora de Inicio</label>
+              <input
+                type="datetime-local"
+                value={form.startsAt}
+                onChange={(event) => setForm((prev) => ({ ...prev, startsAt: event.target.value }))}
+                className="mt-1.5 w-full rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-900 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-4 focus:ring-unisinu-red/15"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">Fecha y Hora de Cierre</label>
+              <input
+                type="datetime-local"
+                value={form.endsAt}
+                onChange={(event) => setForm((prev) => ({ ...prev, endsAt: event.target.value }))}
+                className="mt-1.5 w-full rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-900 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-4 focus:ring-unisinu-red/15"
+              />
+            </div>
           </div>
 
-          <label className="inline-flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
+          <label className="inline-flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-100/80 transition">
             <input
               type="checkbox"
               checked={form.isActive}
               onChange={(event) => setForm((prev) => ({ ...prev, isActive: event.target.checked }))}
+              className="h-4 w-4 rounded accent-unisinu-red"
             />
-            Activar encuesta al guardar
+            Activar encuesta inmediatamente al guardar
           </label>
 
           <QuestionBuilder
@@ -219,16 +243,17 @@ export function SurveyEditorPage() {
           />
 
           {saveMutation.error ? (
-            <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-unisinu-red">
               {saveMutation.error.message}
-            </p>
+            </div>
           ) : null}
 
           <button
             type="submit"
-            className="w-full rounded-2xl bg-slate-950 px-4 py-3 font-semibold text-white"
+            disabled={saveMutation.isPending}
+            className="w-full rounded-xl bg-unisinu-red px-4 py-3 text-sm font-semibold text-white shadow-md shadow-red-600/20 transition hover:bg-unisinu-red-hover disabled:opacity-60"
           >
-            {saveMutation.isPending ? 'Guardando...' : 'Guardar encuesta'}
+            {saveMutation.isPending ? 'Guardando encuesta...' : 'Guardar y Publicar Encuesta'}
           </button>
         </form>
       </Panel>

@@ -9,7 +9,7 @@ import { apiFetch } from '@/lib/api';
 import { formatDate, questionTypeLabel } from '@/lib/utils';
 import type { DashboardResultsDto, SurveySummaryDto } from '@/types/api';
 
-const palette = ['#000000', '#991b1b', '#dc2626', '#fecaca', '#450a0a', '#7f1d1d'];
+const palette = ['#e42313', '#ffb606', '#1a202c', '#4caf50', '#c51d0f', '#0284c7'];
 
 function escapeCsvValue(value: string | number | null | undefined) {
   const normalized = String(value ?? '');
@@ -86,14 +86,14 @@ export function ResultsPage() {
   return (
     <div className="space-y-6">
       <Panel
-        title="Resultados y analitica"
-        subtitle="Explora estadisticas por encuesta y respuestas individuales"
+        title="Resultados y Analítica"
+        subtitle="Métricas consolidadas, distribución de respuestas y registros por estudiante"
         actions={
           resultsQuery.data ? (
             <button
               type="button"
               onClick={exportCsv}
-              className="inline-flex items-center gap-2 rounded-2xl bg-red-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-800"
+              className="inline-flex items-center gap-2 rounded-xl bg-unisinu-red px-4 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm shadow-red-600/20 transition hover:bg-unisinu-red-hover"
             >
               <Download className="h-4 w-4" />
               Exportar CSV
@@ -101,13 +101,15 @@ export function ResultsPage() {
           ) : null
         }
       >
-        <div className="grid gap-4 md:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
-          <div className="rounded-[24px] border border-red-100 bg-slate-50 p-5">
-            <label className="text-sm font-medium text-slate-700">Selecciona una encuesta</label>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
+          <div className="rounded-2xl border border-slate-200/90 bg-slate-50/70 p-5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+              Seleccionar Encuesta
+            </label>
             <select
               value={surveyId}
               onChange={(event) => setSelectedSurveyId(event.target.value)}
-              className="mt-3 w-full rounded-2xl border border-red-100 bg-white px-4 py-3 outline-none focus:border-red-600"
+              className="mt-2 w-full rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-900 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-4 focus:ring-unisinu-red/15"
             >
               {surveysQuery.data?.map((survey) => (
                 <option key={survey.id} value={survey.id}>
@@ -117,34 +119,43 @@ export function ResultsPage() {
             </select>
 
             {resultsQuery.data ? (
-              <div className="mt-5 space-y-3 text-sm text-slate-600">
-                <StatusBadge active={resultsQuery.data.survey.isActive} />
-                <p><strong>Ruta:</strong> {resultsQuery.data.survey.routeName}</p>
-                <p><strong>Respuestas:</strong> {resultsQuery.data.survey.responsesCount}</p>
-                <p><strong>Slug:</strong> {resultsQuery.data.survey.publicSlug}</p>
+              <div className="mt-4 space-y-2.5 border-t border-slate-200/60 pt-4 text-xs text-slate-600">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-slate-700">Estado:</span>
+                  <StatusBadge active={resultsQuery.data.survey.isActive} />
+                </div>
+                <p>
+                  <strong className="text-slate-800">Ruta:</strong> {resultsQuery.data.survey.routeName}
+                </p>
+                <p>
+                  <strong className="text-slate-800">Total respuestas:</strong>{' '}
+                  <span className="font-bold text-unisinu-red">
+                    {resultsQuery.data.survey.responsesCount}
+                  </span>
+                </p>
               </div>
             ) : null}
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <Panel className="md:col-span-1">
-              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Preguntas</p>
-              <p className="mt-3 text-4xl font-semibold text-slate-950">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Preguntas</p>
+              <p className="mt-2 text-3xl font-extrabold text-slate-900">
                 {resultsQuery.data?.analytics.length ?? 0}
               </p>
-            </Panel>
-            <Panel className="md:col-span-1">
-              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Respuestas</p>
-              <p className="mt-3 text-4xl font-semibold text-slate-950">
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Respuestas</p>
+              <p className="mt-2 text-3xl font-extrabold text-unisinu-red">
                 {resultsQuery.data?.survey.responsesCount ?? 0}
               </p>
-            </Panel>
-            <Panel className="md:col-span-1">
-              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Activa</p>
-              <p className="mt-3 text-4xl font-semibold text-slate-950">
-                {resultsQuery.data?.survey.isActive ? 'Si' : 'No'}
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Publicada</p>
+              <p className="mt-2 text-3xl font-extrabold text-slate-900">
+                {resultsQuery.data?.survey.isActive ? 'Sí' : 'No'}
               </p>
-            </Panel>
+            </div>
           </div>
         </div>
       </Panel>

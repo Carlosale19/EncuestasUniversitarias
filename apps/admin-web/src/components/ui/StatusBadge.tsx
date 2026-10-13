@@ -14,8 +14,10 @@ export function StatusBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em]',
-        active ? 'bg-red-100 text-red-700' : 'bg-slate-200 text-slate-700',
+        'inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider',
+        active
+          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
+          : 'bg-slate-100 text-slate-600 border border-slate-200',
       )}
     >
       {active ? activeLabel : inactiveLabel}

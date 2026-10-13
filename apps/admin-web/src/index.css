@@ -2,35 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: "DM Sans", "Segoe UI", sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #0f172a;
-  background: #f8fafc;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  :root {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color: #0f172a;
+    background: #f8fafc;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Estilos globales de alta visibilidad para inputs, textareas y selects */
+  input:not([type='checkbox']):not([type='radio']),
+  textarea,
+  select {
+    font: inherit;
+    color: #0f172a;
+    background-color: #ffffff;
+    border-color: #94a3b8; /* slate-400: borde definido y claramente visible */
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #64748b !important; /* slate-500: placeholder oscuro y legible */
+    opacity: 1 !important;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):focus,
+  textarea:focus,
+  select:focus {
+    border-color: #e42313 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(228, 35, 19, 0.22) !important;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-}
+@layer utilities {
+  .bg-unisinu-navy {
+    background-color: #1a202c !important;
+  }
 
-* {
-  box-sizing: border-box;
-}
+  .bg-unisinu-red {
+    background-color: #e42313 !important;
+  }
 
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
+  .text-unisinu-red {
+    color: #e42313 !important;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
+  .text-unisinu-gold {
+    color: #ffb606 !important;
+  }
+
+  .border-unisinu-red {
+    border-color: #e42313 !important;
+  }
+
+  .unisinu-gradient-header {
+    background: linear-gradient(135deg, #e42313 0%, #ba1608 100%);
+  }
+
+  .unisinu-gradient-dark {
+    background: linear-gradient(145deg, #1a202c 0%, #111827 100%);
+  }
+
+  .unisinu-shadow-card {
+    box-shadow: 0 10px 25px -5px rgba(228, 35, 19, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
 }
