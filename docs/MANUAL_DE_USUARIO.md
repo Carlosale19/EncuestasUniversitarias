@@ -54,7 +54,7 @@
   - [10.1 Selección de Encuesta para Análisis](#101-selección-de-encuesta-para-análisis)
   - [10.2 Métricas y Gráficas de Satisfacción](#102-métricas-y-gráficas-de-satisfacción)
   - [10.3 Exportación Masiva a Archivo CSV](#103-exportación-masiva-a-archivo-csv)
-- [XI. PREGUNTAS FRECUENTES (FAQ) Y SOPORTE](#xi-preguntas-frecuentes-faq-y-soporte)
+- [XI. PREGUNTAS FRECUENTES (FAQ)](#xi-preguntas-frecuentes-faq)
 
 ---
 
@@ -352,7 +352,7 @@ Para auditorías de calidad o análisis estadístico avanzado en Excel, SPSS o P
 
 ---
 
-# XI. PREGUNTAS FRECUENTES (FAQ) Y SOPORTE
+# XI. PREGUNTAS FRECUENTES (FAQ)
 
 ### 1. ¿Qué debo hacer si olvidé mi contraseña de administrador?
 Comuníquese con el Superadministrador de la Escuela de Ingeniería de Sistemas o el Administrador General del sistema. Desde el módulo **Usuarios**, el administrador puede generar una nueva contraseña para su cuenta en cuestión de segundos.
@@ -365,12 +365,6 @@ Sí, puede editar el enunciado o agregar nuevas preguntas. Sin embargo, se recom
 
 ### 4. ¿Por qué una encuesta no carga cuando un estudiante abre el enlace?
 Verifique en el módulo de **Encuestas** que el interruptor de estado se encuentre en **Activo**. Si la encuesta está marcada como inactiva o ya superó su fecha límite de cierre, el formulario no admitirá nuevas participaciones.
-
-### 5. ¿Cómo contacto al soporte técnico de la plataforma?
-Para reportar incidentes técnicos, solicitudes de nuevas funciones o mantenimiento correctivo:
-- **Dependencia:** Escuela de Ingeniería de Sistemas – Universidad del Sinú Seccional Cartagena.
-- **Ubicación:** Campus Universitario Santillana / Plaza Colón, Cartagena de Indias, Colombia.
-- **Correo de Soporte:** `soporte.sistemas@unisinucartagena.edu.co`.
 
 ---
 
