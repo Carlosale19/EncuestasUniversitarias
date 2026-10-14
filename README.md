@@ -97,7 +97,7 @@ Notas:
 
 - El frontend se sirve con Nginx y soporta rutas SPA
 - Nginx redirige `/api/*` al contenedor `api`
-- PostgreSQL usa un volumen persistente llamado `postgres_data`
+- PostgreSQL usa un volumen persistente llamado `encuestas_postgres_data`
 - La API crea el usuario administrador inicial al arrancar si no existe
 - En producción conviene cambiar `DB_SYNC` a `false` cuando migres a un esquema estable
 
