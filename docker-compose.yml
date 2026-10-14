@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
-      - "${POSTGRES_PORT:-54329}:5432"
+      - "${POSTGRES_PORT:-6061}:5432"
     volumes:
       - encuestas_postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -36,9 +36,9 @@ services:
       DB_NAME: ${POSTGRES_DB:-encuestas_universitarias}
       DB_SYNC: ${DB_SYNC:-true}
       JWT_SECRET: ${JWT_SECRET:-super-secret-key}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
-    expose:
-      - "3000"
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:6060}
+    ports:
+      - "${API_PORT:-6062}:3000"
     healthcheck:
       test:
         [
@@ -61,7 +61,7 @@ services:
       api:
         condition: service_healthy
     ports:
-      - "${WEB_PORT:-8080}:80"
+      - "${WEB_PORT:-6060}:80"
 
 volumes:
   encuestas_postgres_data:

@@ -81,9 +81,9 @@ docker compose up -d --build
 
 Servicios:
 
-- Frontend: `http://localhost:8080`
-- API: disponible a traves de `http://localhost:8080/api`
-- PostgreSQL: contenedor interno `postgres`
+- Frontend / Web: `http://localhost:6060`
+- API: disponible a traves de `http://localhost:6060/api` (o directo en `http://localhost:6062`)
+- PostgreSQL: puerto de host `6061` (interno `postgres:5432`)
 
 ### Despliegue en Dockploy
 
