@@ -1,6 +1,6 @@
 import { Plus, Trash2 } from 'lucide-react';
 import type { QuestionType } from '@/types/api';
-import { questionTypeLabel } from '@/lib/utils';
+import { generateLocalId, questionTypeLabel } from '@/lib/utils';
 
 export type QuestionForm = {
   localId: string;
@@ -56,7 +56,7 @@ export function QuestionBuilder({ questions, onChange }: QuestionBuilderProps) {
               options: [
                 ...question.options,
                 {
-                  localId: crypto.randomUUID(),
+                  localId: generateLocalId(),
                   etiqueta: '',
                   valor: '',
                   orden: question.options.length + 1,

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Panel } from '@/components/ui/Panel';
 import { apiFetch } from '@/lib/api';
+import { generateLocalId } from '@/lib/utils';
 import type { QuestionType, SurveyDetailDto, UniversityRouteDto } from '@/types/api';
 import { QuestionBuilder, type QuestionForm } from '../components/QuestionBuilder';
 
@@ -27,7 +28,7 @@ const initialSurveyForm: SurveyForm = {
 
 function createEmptyQuestion(type: QuestionType = 'SHORT_TEXT', order = 1): QuestionForm {
   return {
-    localId: crypto.randomUUID(),
+    localId: generateLocalId(),
     titulo: '',
     descripcion: '',
     tipo: type,
