@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
 import { Repository } from 'typeorm';
@@ -66,6 +66,20 @@ export class UsersService {
     user.passwordHash = await hash(dto.password, 10);
     await this.usersRepository.save(user);
 
+    return { success: true };
+  }
+
+  async remove(id: string) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (user.email === 'admin@universidad.edu') {
+      throw new BadRequestException('No es posible eliminar el administrador principal del sistema');
+    }
+
+    await this.usersRepository.remove(user);
     return { success: true };
   }
 

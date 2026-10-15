@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Download } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Panel } from '@/components/ui/Panel';
@@ -20,12 +21,20 @@ function escapeCsvValue(value: string | number | null | undefined) {
 }
 
 export function ResultsPage() {
-  const [selectedSurveyId, setSelectedSurveyId] = useState<string>('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlSurveyId = searchParams.get('surveyId') ?? '';
+  const [selectedSurveyId, setSelectedSurveyId] = useState<string>(urlSurveyId);
 
   const surveysQuery = useQuery({
     queryKey: ['surveys'],
     queryFn: () => apiFetch<SurveySummaryDto[]>('/surveys'),
   });
+
+  useEffect(() => {
+    if (urlSurveyId && urlSurveyId !== selectedSurveyId) {
+      setSelectedSurveyId(urlSurveyId);
+    }
+  }, [urlSurveyId]);
 
   const surveyId = selectedSurveyId || surveysQuery.data?.[0]?.id || '';
 
@@ -34,6 +43,7 @@ export function ResultsPage() {
     queryFn: () => apiFetch<DashboardResultsDto>(`/dashboard/surveys/${surveyId}/results`),
     enabled: Boolean(surveyId),
   });
+
 
   const choiceAnalytics = useMemo(
     () => resultsQuery.data?.analytics.filter((item) => item.options && item.options.length > 0) ?? [],
@@ -108,7 +118,11 @@ export function ResultsPage() {
             </label>
             <select
               value={surveyId}
-              onChange={(event) => setSelectedSurveyId(event.target.value)}
+              onChange={(event) => {
+                const nextId = event.target.value;
+                setSelectedSurveyId(nextId);
+                setSearchParams({ surveyId: nextId });
+              }}
               className="mt-2 w-full rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-900 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-4 focus:ring-unisinu-red/15"
             >
               {surveysQuery.data?.map((survey) => (

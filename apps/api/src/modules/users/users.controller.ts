@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -44,4 +45,11 @@ export class UsersController {
   changePassword(@Param('id') id: string, @Body() body: ChangePasswordDto) {
     return this.usersService.changePassword(id, body);
   }
+
+  @Delete(':id')
+  @Roles(UserRole.ADMIN)
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(id);
+  }
 }
+

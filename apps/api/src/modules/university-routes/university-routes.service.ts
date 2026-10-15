@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUniversityRouteDto } from './dto/create-university-route.dto.js';
@@ -43,9 +43,18 @@ export class UniversityRoutesService {
   }
 
   async remove(id: string) {
-    const route = await this.routesRepository.findOne({ where: { id } });
+    const route = await this.routesRepository.findOne({
+      where: { id },
+      relations: ['surveys'],
+    });
     if (!route) {
       throw new NotFoundException('Ruta no encontrada');
+    }
+
+    if (route.surveys && route.surveys.length > 0) {
+      throw new BadRequestException(
+        `No es posible eliminar la ruta "${route.nombreRuta}" porque tiene ${route.surveys.length} encuesta(s) asociada(s). Debe eliminar o reasignar las encuestas primero.`
+      );
     }
 
     await this.routesRepository.remove(route);

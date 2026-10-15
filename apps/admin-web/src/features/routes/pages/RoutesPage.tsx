@@ -90,6 +90,11 @@ export function RoutesPage() {
                 className="mt-1.5 min-h-28 w-full rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-500 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-4 focus:ring-unisinu-red/15"
               />
             </div>
+            {saveMutation.error ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-unisinu-red">
+                {saveMutation.error.message}
+              </div>
+            ) : null}
             <div className="flex flex-wrap gap-2 pt-1">
               <button
                 type="submit"
@@ -115,6 +120,11 @@ export function RoutesPage() {
 
           {/* Listado de rutas */}
           <div className="space-y-3">
+            {deleteMutation.error ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-unisinu-red">
+                {deleteMutation.error.message}
+              </div>
+            ) : null}
             {routesQuery.isLoading ? (
               <div className="space-y-3">
                 {Array.from({ length: 3 }).map((_, index) => (

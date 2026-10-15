@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
 import { Repository } from 'typeorm';
@@ -61,6 +61,17 @@ let UsersService = class UsersService {
         }
         user.passwordHash = await hash(dto.password, 10);
         await this.usersRepository.save(user);
+        return { success: true };
+    }
+    async remove(id) {
+        const user = await this.usersRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new NotFoundException('Usuario no encontrado');
+        }
+        if (user.email === 'admin@universidad.edu') {
+            throw new BadRequestException('No es posible eliminar el administrador principal del sistema');
+        }
+        await this.usersRepository.remove(user);
         return { success: true };
     }
     async ensureAdminUser() {

@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UniversityRoute } from './university-route.entity.js';
@@ -42,9 +42,15 @@ let UniversityRoutesService = class UniversityRoutesService {
         return this.routesRepository.save(route);
     }
     async remove(id) {
-        const route = await this.routesRepository.findOne({ where: { id } });
+        const route = await this.routesRepository.findOne({
+            where: { id },
+            relations: ['surveys'],
+        });
         if (!route) {
             throw new NotFoundException('Ruta no encontrada');
+        }
+        if (route.surveys && route.surveys.length > 0) {
+            throw new BadRequestException(`No es posible eliminar la ruta "${route.nombreRuta}" porque tiene ${route.surveys.length} encuesta(s) asociada(s). Debe eliminar o reasignar las encuestas primero.`);
         }
         await this.routesRepository.remove(route);
         return { success: true };

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Activity, ClipboardList, MessageSquare, RadioTower, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Panel } from '@/components/ui/Panel';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { apiFetch } from '@/lib/api';
@@ -85,9 +86,10 @@ export function DashboardPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
             {overview?.surveys.map((survey) => (
-              <article
+              <Link
                 key={survey.id}
-                className="group rounded-2xl border border-slate-200/80 bg-white p-5 transition hover:border-red-200 hover:shadow-md hover:shadow-red-950/5"
+                to={`/resultados?surveyId=${survey.id}`}
+                className="group block rounded-2xl border border-slate-200/80 bg-white p-5 transition hover:border-red-200 hover:shadow-md hover:shadow-red-950/5"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
@@ -104,7 +106,7 @@ export function DashboardPage() {
                   </span>
                   <span>{formatDate(survey.createdAt)}</span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         )}

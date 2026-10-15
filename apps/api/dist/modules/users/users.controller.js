@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Body, Controller, Get, Inject, Param, Patch, Post, UseGuards, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, UseGuards, } from '@nestjs/common';
 import { JwtAuthGuard } from '../../common/jwt-auth.guard.js';
 import { Roles } from '../../common/roles.decorator.js';
 import { RolesGuard } from '../../common/roles.guard.js';
@@ -34,6 +34,9 @@ let UsersController = class UsersController {
     }
     changePassword(id, body) {
         return this.usersService.changePassword(id, body);
+    }
+    remove(id) {
+        return this.usersService.remove(id);
     }
 };
 __decorate([
@@ -68,6 +71,14 @@ __decorate([
     __metadata("design:paramtypes", [String, ChangePasswordDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "changePassword", null);
+__decorate([
+    Delete(':id'),
+    Roles(UserRole.ADMIN),
+    __param(0, Param('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "remove", null);
 UsersController = __decorate([
     Controller('users'),
     UseGuards(JwtAuthGuard, RolesGuard),

@@ -64,6 +64,17 @@ export function UsersPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) =>
+      apiFetch(`/users/${id}`, {
+        method: 'DELETE',
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+
+
   const sortedUsers = useMemo(
     () => [...(usersQuery.data ?? [])].sort((a, b) => Number(b.isActive) - Number(a.isActive)),
     [usersQuery.data],
@@ -160,89 +171,120 @@ export function UsersPage() {
           </form>
 
           {/* Tabla de usuarios con scroll horizontal seguro */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            {sortedUsers.length === 0 ? (
-              <div className="p-6">
-                <EmptyState
-                  title="Aún no hay usuarios"
-                  description="Crea la primera cuenta administrativa u operativa desde el formulario."
-                />
+          <div className="space-y-3">
+            {deleteMutation.error ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-unisinu-red">
+                {deleteMutation.error.message}
               </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[580px] text-left text-xs sm:text-sm">
-                  <thead className="border-b border-slate-200 bg-slate-50 font-semibold uppercase tracking-wider text-slate-500 text-[11px]">
-                    <tr>
-                      <th className="px-4 py-3">Usuario</th>
-                      <th className="px-4 py-3">Rol</th>
-                      <th className="px-4 py-3">Estado</th>
-                      <th className="px-4 py-3">Fecha Alta</th>
-                      <th className="px-4 py-3">Contraseña</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {sortedUsers.map((user) => (
-                      <tr key={user.id} className="hover:bg-slate-50/60 transition">
-                        <td className="px-4 py-3.5">
-                          <p className="font-bold text-slate-900">{user.name}</p>
-                          <p className="text-xs text-slate-500">{user.email}</p>
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <span className="inline-block rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
-                            {user.role === 'ADMIN' ? 'Administrador' : 'Operador'}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <div className="flex flex-col gap-1.5 items-start">
-                            <StatusBadge active={user.isActive} />
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateMutation.mutate({
-                                  id: user.id,
-                                  payload: { isActive: !user.isActive },
-                                })
-                              }
-                              className="text-[11px] font-semibold text-unisinu-red hover:underline"
-                            >
-                              {user.isActive ? 'Desactivar' : 'Activar'}
-                            </button>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3.5 text-xs text-slate-500">
-                          {formatDate(user.createdAt)}
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <div className="flex items-center gap-1.5">
-                            <input
-                              type="password"
-                              placeholder="Nueva clave"
-                              value={passwordMap[user.id] ?? ''}
-                              onChange={(event) =>
-                                setPasswordMap((prev) => ({ ...prev, [user.id]: event.target.value }))
-                              }
-                              className="w-28 sm:w-32 rounded-lg border-2 border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-900 placeholder:text-slate-500 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-2 focus:ring-unisinu-red/20"
-                            />
-                            <button
-                              type="button"
-                              onClick={() =>
-                                passwordMutation.mutate({
-                                  id: user.id,
-                                  password: passwordMap[user.id] ?? '',
-                                })
-                              }
-                              className="rounded-lg bg-unisinu-navy px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-slate-800"
-                            >
-                              Guardar
-                            </button>
-                          </div>
-                        </td>
+            ) : null}
+            {updateMutation.error ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-unisinu-red">
+                {updateMutation.error.message}
+              </div>
+            ) : null}
+
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              {sortedUsers.length === 0 ? (
+                <div className="p-6">
+                  <EmptyState
+                    title="Aún no hay usuarios"
+                    description="Crea la primera cuenta administrativa u operativa desde el formulario."
+                  />
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[620px] text-left text-xs sm:text-sm">
+                    <thead className="border-b border-slate-200 bg-slate-50 font-semibold uppercase tracking-wider text-slate-500 text-[11px]">
+                      <tr>
+                        <th className="px-4 py-3">Usuario</th>
+                        <th className="px-4 py-3">Rol</th>
+                        <th className="px-4 py-3">Estado</th>
+                        <th className="px-4 py-3">Fecha Alta</th>
+                        <th className="px-4 py-3">Contraseña</th>
+                        <th className="px-4 py-3 text-right">Acciones</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {sortedUsers.map((user) => (
+                        <tr key={user.id} className="hover:bg-slate-50/60 transition">
+                          <td className="px-4 py-3.5">
+                            <p className="font-bold text-slate-900">{user.name}</p>
+                            <p className="text-xs text-slate-500">{user.email}</p>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className="inline-block rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                              {user.role === 'ADMIN' ? 'Administrador' : 'Operador'}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <div className="flex flex-col gap-1.5 items-start">
+                              <StatusBadge active={user.isActive} />
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateMutation.mutate({
+                                    id: user.id,
+                                    payload: { isActive: !user.isActive },
+                                  })
+                                }
+                                className="text-[11px] font-semibold text-unisinu-red hover:underline"
+                              >
+                                {user.isActive ? 'Desactivar' : 'Activar'}
+                              </button>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-slate-500">
+                            {formatDate(user.createdAt)}
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <div className="flex items-center gap-1.5">
+                              <input
+                                type="password"
+                                placeholder="Nueva clave"
+                                value={passwordMap[user.id] ?? ''}
+                                onChange={(event) =>
+                                  setPasswordMap((prev) => ({ ...prev, [user.id]: event.target.value }))
+                                }
+                                className="w-24 sm:w-28 rounded-lg border-2 border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-900 placeholder:text-slate-500 outline-none transition hover:border-slate-400 focus:border-unisinu-red focus:ring-2 focus:ring-unisinu-red/20"
+                              />
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  passwordMutation.mutate({
+                                    id: user.id,
+                                    password: passwordMap[user.id] ?? '',
+                                  })
+                                }
+                                className="rounded-lg bg-unisinu-navy px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-slate-800"
+                              >
+                                Guardar
+                              </button>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3.5 text-right">
+                            {user.email !== 'admin@universidad.edu' ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (confirm(`¿Estás seguro de eliminar al usuario "${user.name}" (${user.email})?`)) {
+                                    deleteMutation.mutate(user.id);
+                                  }
+                                }}
+                                className="rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1 text-xs font-semibold text-unisinu-red transition hover:bg-unisinu-red hover:text-white"
+                              >
+                                Eliminar
+                              </button>
+                            ) : (
+                              <span className="text-[11px] font-medium text-slate-400">Principal</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </Panel>
