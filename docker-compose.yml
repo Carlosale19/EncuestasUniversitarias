@@ -7,8 +7,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-encuestas_universitarias}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-    expose:
-      - "5432"
+    ports:
+      - "${POSTGRES_PORT:-6061}:5432"
     volumes:
       - encuestas_postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -37,8 +37,8 @@ services:
       DB_SYNC: ${DB_SYNC:-true}
       JWT_SECRET: ${JWT_SECRET:-super-secret-key}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:6060,https://encuestas.ondeploy.online}
-    expose:
-      - "3000"
+    ports:
+      - "${API_PORT:-6062}:3000"
     healthcheck:
       test:
         [
@@ -60,8 +60,8 @@ services:
     depends_on:
       api:
         condition: service_healthy
-    expose:
-      - "80"
+    ports:
+      - "${WEB_PORT:-6060}:6060"
 
 volumes:
   encuestas_postgres_data:
