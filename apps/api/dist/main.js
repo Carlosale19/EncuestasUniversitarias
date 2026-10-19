@@ -27,7 +27,7 @@ async function bootstrap() {
     }));
     const usersService = app.get(UsersService);
     await usersService.ensureAdminUser();
-    const port = Number(process.env.PORT ?? 3000);
+    const port = Number(process.env.PORT ?? 6062);
     await app.listen(port, '0.0.0.0');
     console.log(`API escuchando en http://localhost:${port}/api`);
 }
