@@ -36,7 +36,7 @@ services:
       DB_NAME: ${POSTGRES_DB:-encuestas_universitarias}
       DB_SYNC: ${DB_SYNC:-true}
       JWT_SECRET: ${JWT_SECRET:-super-secret-key}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:6060,https://encuestas.ondeploy.online}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
     ports:
       - "${API_PORT:-6062}:3000"
     healthcheck:
@@ -54,12 +54,14 @@ services:
       context: .
       dockerfile: Dockerfile.web
       args:
-        VITE_API_URL: /api
+        VITE_API_URL: ${VITE_API_URL:-/api}
     container_name: encuestas-web
     restart: unless-stopped
     depends_on:
       api:
         condition: service_healthy
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-}
     ports:
       - "${WEB_PORT:-6060}:6060"
 

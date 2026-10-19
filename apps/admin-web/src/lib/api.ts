@@ -1,6 +1,23 @@
 import { useAuthStore } from '@/features/auth/hooks/useAuthStore';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
+declare global {
+  interface Window {
+    __ENV__?: {
+      VITE_API_URL?: string;
+    };
+  }
+}
+
+function resolveApiUrl(): string {
+  const runtimeUrl = typeof window !== 'undefined' ? window.__ENV__?.VITE_API_URL : undefined;
+  const buildUrl = import.meta.env.VITE_API_URL;
+  const target = (runtimeUrl && runtimeUrl.trim() !== '' && !runtimeUrl.startsWith('$') ? runtimeUrl : undefined) ||
+    (buildUrl && buildUrl.trim() !== '' ? buildUrl : undefined) ||
+    '/api';
+  return target.trim().replace(/\/+$/, '');
+}
+
+const API_URL = resolveApiUrl();
 
 type FetchOptions = RequestInit & {
   rawBody?: boolean;
@@ -28,7 +45,8 @@ export async function apiFetch<T>(path: string, options: FetchOptions = {}): Pro
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const response = await fetch(`${API_URL}${normalizedPath}`, {
     ...options,
     headers,
   });

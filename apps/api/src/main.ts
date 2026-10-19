@@ -6,16 +6,20 @@ import { UsersService } from './modules/users/users.service.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const corsOriginEnv = process.env.CORS_ORIGIN;
+  const isWildcard = !corsOriginEnv || corsOriginEnv.trim() === '*' || corsOriginEnv.includes('*');
+
   const allowedOrigins = Array.from(
     new Set([
-      ...(process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim()).filter(Boolean) ?? []),
+      ...(corsOriginEnv?.split(',').map((origin) => origin.trim()).filter(Boolean) ?? []),
       'http://localhost:5173',
       'http://localhost:5174',
+      'http://localhost:6060',
     ]),
   );
 
   app.enableCors({
-    origin: allowedOrigins,
+    origin: isWildcard ? true : allowedOrigins,
     credentials: true,
   });
 
